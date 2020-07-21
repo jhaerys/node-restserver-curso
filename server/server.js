@@ -1,7 +1,9 @@
 const express = require("express");
-const app = express();
+const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 require("./config/config");
+
+const app = express();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -9,36 +11,23 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-app.get("/usuario", function(req, res) {
-    res.json("Get Usuario");
-});
+//importar usuarios.js
+app.use(require("./routes/usuario"));
 
-app.post("/usuario", function(req, res) {
-    let body = req.body;
-
-    if (body.nombre === undefined) {
-        res.status(400).json({
-            ok: false,
-            mensaje: "el nombre es necesario",
-        });
-    } else {
-        res.json({
-            Persona: body,
-        });
+//coneccion db
+mongoose.connect(
+    process.env.URLDB, {
+        useNewUrlParser: true,
+        useCreateIndex: true,
+        useUnifiedTopology: true,
+        useFindAndModify: true,
+    },
+    (err, res) => {
+        if (err) throw err;
+        console.log("base de datos online");
     }
-});
-
-app.put("/usuario/:id", function(req, res) {
-    let id = req.params.id;
-    res.json({
-        id,
-    });
-});
-
-app.delete("/usuario", function(req, res) {
-    res.json("Delete Usuario");
-});
+);
 
 app.listen(process.env.PORT, () => {
-    console.log("Escuchando el puerdo:", 3000);
+    console.log("Escuchando el puerdo:", process.env.PORT);
 });
