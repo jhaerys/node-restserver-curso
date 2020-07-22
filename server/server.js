@@ -11,8 +11,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json());
 
-//importar usuarios.js
-app.use(require("./routes/usuario"));
+//rutas
+app.use(require("./routes/index"));
 
 //coneccion db
 mongoose.connect(
